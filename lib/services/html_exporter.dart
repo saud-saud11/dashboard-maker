@@ -21,18 +21,18 @@ class DashboardHtmlExporter {
 
   static String _indicatorColorHex(IndicatorCategory cat) {
     switch (cat) {
-      case IndicatorCategory.general: return '#6366F1';
-      case IndicatorCategory.health:     return '#EC4899';
-      case IndicatorCategory.economic:    return '#F59E0B';
-      case IndicatorCategory.environment:      return '#EF4444';
-      case IndicatorCategory.education:   return '#06B6D4';
+      case IndicatorCategory.general: return '#006C5B'; // MOH Teal
+      case IndicatorCategory.health:     return '#10B981'; // Emerald
+      case IndicatorCategory.economic:    return '#D97706'; // Amber
+      case IndicatorCategory.environment:      return '#43A047'; // Green
+      case IndicatorCategory.education:   return '#00ACC1'; // Light Teal
     }
   }
 
   static String _statusColorHex(Indicator e) {
     final pct = e.achievePct;
     if (pct >= 100) return '#10B981';
-    if (pct >= 75)  return '#06B6D4';
+    if (pct >= 75)  return '#00ACC1';
     if (pct >= 50)  return '#F59E0B';
     return '#EF4444';
   }
@@ -103,27 +103,27 @@ class DashboardHtmlExporter {
           <animate attributeName="height" from="0" to="$barH1" dur="0.8s" fill="freeze" begin="${i * 0.15}s"/>
           <animate attributeName="y" from="${padTop + plotH}" to="$y1" dur="0.8s" fill="freeze" begin="${i * 0.15}s"/>
         </rect>
-        <rect x="$x2" y="$y2" width="$barW" height="$barH2" rx="4" ry="4" fill="#06B6D4" opacity="0.9">
+        <rect x="$x2" y="$y2" width="$barW" height="$barH2" rx="4" ry="4" fill="#10B981" opacity="0.9">
           <animate attributeName="height" from="0" to="$barH2" dur="0.8s" fill="freeze" begin="${i * 0.15 + 0.1}s"/>
           <animate attributeName="y" from="${padTop + plotH}" to="$y2" dur="0.8s" fill="freeze" begin="${i * 0.15 + 0.1}s"/>
         </rect>
-        <text x="$centerX" y="$labelY" text-anchor="middle" fill="#CBD5E1" font-size="10">$label</text>
+        <text x="$centerX" y="$labelY" text-anchor="middle" fill="#4b5563" font-size="10">$label</text>
         <text x="${x1 + barW/2}" y="${y1 - 4}" text-anchor="middle" fill="$catColor" font-size="9" font-weight="bold">${e.current}</text>
-        <text x="${x2 + barW/2}" y="${y2 - 4}" text-anchor="middle" fill="#06B6D4" font-size="9" font-weight="bold">${e.target}</text>
+        <text x="${x2 + barW/2}" y="${y2 - 4}" text-anchor="middle" fill="#10B981" font-size="9" font-weight="bold">${e.target}</text>
       ''';
     }).join('');
 
     return '''
-<svg viewBox="0 0 $chartW $chartH" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto;">
-  <rect width="$chartW" height="$chartH" rx="12" fill="#1E293B"/>
+<svg viewBox="0 0 $chartW $chartH" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto;border: 1px solid #e5e7eb; border-radius:12px;">
+  <rect width="$chartW" height="$chartH" rx="12" fill="#ffffff"/>
   $gridLines
-  <line x1="$padLeft" y1="$padTop" x2="$padLeft" y2="${padTop + plotH}" stroke="#ffffff20" stroke-width="1"/>
+  <line x1="$padLeft" y1="$padTop" x2="$padLeft" y2="${padTop + plotH}" stroke="#e5e7eb" stroke-width="1"/>
   $bars
   <!-- Legend -->
-  <rect x="210" y="${chartH - 18}" width="12" height="12" rx="2" fill="#6366F1" />
-  <text x="226" y="${chartH - 8}" fill="#CBD5E1" font-size="11">القيمة الحالية</text>
-  <rect x="330" y="${chartH - 18}" width="12" height="12" rx="2" fill="#06B6D4"/>
-  <text x="346" y="${chartH - 8}" fill="#CBD5E1" font-size="11">الهدف المستهدف</text>
+  <rect x="210" y="${chartH - 18}" width="12" height="12" rx="2" fill="#006C5B" />
+  <text x="226" y="${chartH - 8}" fill="#4b5563" font-size="11">الوضع الحالي</text>
+  <rect x="330" y="${chartH - 18}" width="12" height="12" rx="2" fill="#10B981"/>
+  <text x="346" y="${chartH - 8}" fill="#4b5563" font-size="11">الهدف</text>
 </svg>''';
   }
 

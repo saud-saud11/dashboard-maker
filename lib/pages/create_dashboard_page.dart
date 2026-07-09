@@ -791,13 +791,13 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
               margin: const EdgeInsets.only(left: 10),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: sel ? const Color(0xFF6366F1) : const Color(0xFF1E293B),
+                color: sel ? const Color(0xFF10B981) : const Color(0xFF064E3B),
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                  color: sel ? const Color(0xFF6366F1) : const Color(0x1AFFFFFF),
+                  color: sel ? const Color(0xFF10B981) : const Color(0x1AFFFFFF),
                 ),
                 boxShadow: sel ? const [
-                  BoxShadow(color: Color(0x506366F1), blurRadius: 12, offset: Offset(0, 4)),
+                  BoxShadow(color: Color(0x3010B981), blurRadius: 12, offset: Offset(0, 4)),
                 ] : null,
               ),
               child: Row(
@@ -906,12 +906,12 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1E1B4B), Color(0xFF0F172A)],
+          colors: [Color(0xFF006C5B), Color(0xFF022C22)],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x336366F1)),
+        border: Border.all(color: const Color(0x3310B981)),
       ),
       child: Column(
         children: [
@@ -920,12 +920,12 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [Color(0x406366F1), Color(0x1006B6D4)]),
+              gradient: LinearGradient(colors: [Color(0x40006C5B), Color(0x1010B981)]),
               borderRadius: BorderRadius.vertical(top: Radius.circular(23)),
             ),
             child: Row(
               children: [
-                const Text('🏆', style: TextStyle(fontSize: 22)),
+                const Icon(Icons.stars_rounded, color: Color(0xFFD97706), size: 24),
                 const SizedBox(width: 12),
                 const Text('ملخص الأداء العام', style: TextStyle(
                   fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white,
@@ -933,7 +933,7 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
                 const Spacer(),
                 Text(
                   '$total مؤشر',
-                  style: const TextStyle(fontSize: 13, color: Color(0xFF6366F1), fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 13, color: Color(0xFF10B981), fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -950,11 +950,11 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
                 Expanded(
                   child: Column(
                     children: [
-                      _StatRow(icon: '✅', label: 'مُحقَّق', value: achieved, color: const Color(0xFF10B981)),
+                      _StatRow(icon: Icons.check_circle_outline_rounded, label: 'مُحقَّق', value: achieved, color: const Color(0xFF10B981)),
                       const SizedBox(height: 10),
-                      _StatRow(icon: '🟡', label: 'قريب من الهدف', value: onTrack, color: const Color(0xFFF59E0B)),
+                      _StatRow(icon: Icons.pending_outlined, label: 'قريب من الهدف', value: onTrack, color: const Color(0xFFF59E0B)),
                       const SizedBox(height: 10),
-                      _StatRow(icon: '🔴', label: 'يحتاج تحسين', value: needsWork, color: const Color(0xFFEF4444)),
+                      _StatRow(icon: Icons.error_outline_rounded, label: 'يحتاج تحسين', value: needsWork, color: const Color(0xFFEF4444)),
                     ],
                   ),
                 ),
@@ -1071,7 +1071,7 @@ class _GaugeCardState extends State<_GaugeCard> with SingleTickerProviderStateMi
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
+            color: const Color(0xFF064E3B),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: const Color(0x1AFFFFFF)),
             boxShadow: widget.live ? [
@@ -1258,7 +1258,7 @@ class _ThermometerCardState extends State<_ThermometerCard> with SingleTickerPro
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
+            color: const Color(0xFF064E3B),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: const Color(0x1AFFFFFF)),
           ),
@@ -1452,7 +1452,7 @@ class _FullKpiCardState extends State<_FullKpiCard> with SingleTickerProviderSta
         final v = _prog.value;
         return Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
+            color: const Color(0xFF064E3B),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: const Color(0x1AFFFFFF)),
           ),
@@ -1621,7 +1621,7 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
+            color: const Color(0xFF064E3B),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: const Color(0x1AFFFFFF)),
           ),
@@ -1774,7 +1774,7 @@ class _TrafficLightCardState extends State<_TrafficLightCard> with SingleTickerP
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
+            color: const Color(0xFF064E3B),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: const Color(0x1AFFFFFF)),
           ),
@@ -1952,7 +1952,7 @@ class _AnimatedProgressBar extends StatelessWidget {
 }
 
 class _StatRow extends StatelessWidget {
-  final String icon;
+  final IconData icon;
   final String label;
   final int value;
   final Color color;
@@ -1962,7 +1962,7 @@ class _StatRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(icon, style: const TextStyle(fontSize: 16)),
+        Icon(icon, size: 18, color: color),
         const SizedBox(width: 10),
         Expanded(child: Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[300]))),
         Container(
@@ -2162,7 +2162,7 @@ class _TemplateBtn extends StatelessWidget {
         decoration: BoxDecoration(
           color: const Color(0xFF064E3B),
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0x33FFFFFF)),
+          border: Border.all(color: const Color(0x1AFFFFFF)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
