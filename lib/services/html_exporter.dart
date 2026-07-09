@@ -99,17 +99,17 @@ class DashboardHtmlExporter {
       final subLabelY = padTop + plotH + 32;
 
       return '''
-        <rect x="$x1" y="$y1" width="$barW" height="$barH1" rx="4" ry="4" fill="$catColor" opacity="0.9">
+        <rect x="$x1" y="$y1" width="$barW" height="$barH1" rx="4" ry="4" fill="#006C5B" opacity="0.9">
           <animate attributeName="height" from="0" to="$barH1" dur="0.8s" fill="freeze" begin="${i * 0.15}s"/>
           <animate attributeName="y" from="${padTop + plotH}" to="$y1" dur="0.8s" fill="freeze" begin="${i * 0.15}s"/>
         </rect>
-        <rect x="$x2" y="$y2" width="$barW" height="$barH2" rx="4" ry="4" fill="#10B981" opacity="0.9">
+        <rect x="$x2" y="$y2" width="$barW" height="$barH2" rx="4" ry="4" fill="#D97706" opacity="0.9">
           <animate attributeName="height" from="0" to="$barH2" dur="0.8s" fill="freeze" begin="${i * 0.15 + 0.1}s"/>
           <animate attributeName="y" from="${padTop + plotH}" to="$y2" dur="0.8s" fill="freeze" begin="${i * 0.15 + 0.1}s"/>
         </rect>
         <text x="$centerX" y="$labelY" text-anchor="middle" fill="#4b5563" font-size="10">$label</text>
-        <text x="${x1 + barW/2}" y="${y1 - 4}" text-anchor="middle" fill="$catColor" font-size="9" font-weight="bold">${e.current}</text>
-        <text x="${x2 + barW/2}" y="${y2 - 4}" text-anchor="middle" fill="#10B981" font-size="9" font-weight="bold">${e.target}</text>
+        <text x="${x1 + barW/2}" y="${y1 - 4}" text-anchor="middle" fill="#006C5B" font-size="9" font-weight="bold">${e.current}</text>
+        <text x="${x2 + barW/2}" y="${y2 - 4}" text-anchor="middle" fill="#D97706" font-size="9" font-weight="bold">${e.target}</text>
       ''';
     }).join('');
 
@@ -122,7 +122,7 @@ class DashboardHtmlExporter {
   <!-- Legend -->
   <rect x="210" y="${chartH - 18}" width="12" height="12" rx="2" fill="#006C5B" />
   <text x="226" y="${chartH - 8}" fill="#4b5563" font-size="11">الوضع الحالي</text>
-  <rect x="330" y="${chartH - 18}" width="12" height="12" rx="2" fill="#10B981"/>
+  <rect x="330" y="${chartH - 18}" width="12" height="12" rx="2" fill="#D97706"/>
   <text x="346" y="${chartH - 8}" fill="#4b5563" font-size="11">الهدف</text>
 </svg>''';
   }

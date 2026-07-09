@@ -1652,7 +1652,7 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('الحالي', style: TextStyle(fontSize: 11, color: Colors.grey[400])),
-                      Text('${ind.current} ${ind.unit}', style: TextStyle(fontSize: 12, color: catCol, fontWeight: FontWeight.bold)),
+                      Text('${ind.current} ${ind.unit}', style: const TextStyle(fontSize: 12, color: Color(0xFF10B981), fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -1666,8 +1666,8 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
                           child: Container(
                             height: 22,
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [catCol, catCol.withAlpha(180)],
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF006C5B), Color(0xFF004D40)],
                               ),
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -1686,8 +1686,8 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('الهدف المستهدف', style: TextStyle(fontSize: 11, color: Color(0xFF10B981))),
-                      Text('${ind.target} ${ind.unit}', style: const TextStyle(fontSize: 12, color: Color(0xFF10B981), fontWeight: FontWeight.bold)),
+                      const Text('الهدف المستهدف', style: TextStyle(fontSize: 11, color: Color(0xFFD97706))),
+                      Text('${ind.target} ${ind.unit}', style: const TextStyle(fontSize: 12, color: Color(0xFFD97706), fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -1702,7 +1702,7 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
                             height: 22,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF10B981), Color(0xFF006C5B)],
+                                colors: [Color(0xFFD97706), Color(0xFFB45309)],
                               ),
                               borderRadius: BorderRadius.circular(8),
                             ),
