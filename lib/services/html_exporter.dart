@@ -223,7 +223,7 @@ class DashboardHtmlExporter {
     <div class="val-arrow">↔</div>
     <div class="val-block">
       <div class="val-label">الهدف</div>
-      <div class="val-number" style="color:#06B6D4;">${e.target} ${e.unit}</div>
+      <div class="val-number" style="color:#D97706;">${e.target} ${e.unit}</div>
     </div>
     <div class="ind-donut">$donut</div>
   </div>
