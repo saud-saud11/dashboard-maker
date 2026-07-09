@@ -39,11 +39,11 @@ class DashboardHtmlExporter {
 
   static String _categoryIcon(IndicatorCategory cat) {
     switch (cat) {
-      case IndicatorCategory.general: return '📊';
-      case IndicatorCategory.health:     return '❤️';
-      case IndicatorCategory.economic:    return '💰';
-      case IndicatorCategory.environment:      return '🌿';
-      case IndicatorCategory.education:   return '📚';
+      case IndicatorCategory.general: return 'bar_chart';
+      case IndicatorCategory.health:     return 'favorite';
+      case IndicatorCategory.economic:    return 'payments';
+      case IndicatorCategory.environment:      return 'eco';
+      case IndicatorCategory.education:   return 'school';
     }
   }
 
@@ -207,38 +207,29 @@ class DashboardHtmlExporter {
       return '''
 <div class="ind-card">
   <div class="ind-header">
-    <div class="ind-icon" style="background:${catColor}22;color:$catColor;">$icon</div>
-    <div class="ind-meta">
-      <div class="ind-name">${e.name}</div>
-      <div class="ind-cat">${e.category.labelAr}</div>
+    <div class="ind-title">
+      <div class="ind-icon" style="background:${catColor}22; color:$catColor;">
+        <span class="material-symbols-outlined">$icon</span>
+      </div>
+      ${e.name}
     </div>
-    <div class="status-badge" style="background:${statColor}22;color:$statColor;border-color:${statColor}44;">${e.statusLabel}</div>
+    <div class="ind-status" style="background:$statColor;">${e.statusLabel}</div>
   </div>
   <div class="ind-values">
     <div class="val-block">
       <div class="val-label">القيمة الحالية</div>
       <div class="val-number" style="color:$catColor;">${e.current} ${e.unit}</div>
     </div>
-    <div class="val-arrow">→</div>
+    <div class="val-arrow">↔</div>
     <div class="val-block">
-      <div class="val-label">الهدف المستهدف</div>
+      <div class="val-label">الهدف</div>
       <div class="val-number" style="color:#06B6D4;">${e.target} ${e.unit}</div>
     </div>
     <div class="ind-donut">$donut</div>
   </div>
-  <div class="prog-wrap">
-    <div class="prog-labels">
-      <span>التقدم نحو الهدف</span>
-      <span style="color:$statColor;font-weight:700;">${pct.toStringAsFixed(1)}%</span>
-    </div>
-    <div class="prog-track">
-      <div class="prog-fill" style="width:${pct.clamp(0, 100)}%;background:$statColor;"></div>
-    </div>
-  </div>
 </div>''';
     }).join('\n');
 
-    // Summary section
     final summaryRing = _buildOverallRing(overallAvg);
     final barChart    = _buildSvgBarChart(indicators);
 
@@ -246,126 +237,88 @@ class DashboardHtmlExporter {
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>$title — داشبورد ميكر</title>
+  <title>$title</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700;900&family=Inter:wght@400;600;700;900&display=swap');
-
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    :root{
-      --bg:#0B0F19;--surface:#1E293B;--surface2:#0F172A;
-      --indigo:#6366F1;--cyan:#06B6D4;--white:#F1F5F9;
-      --muted:#64748B;--border:#1E293B;
+    body {
+      font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f3f4f6;
+      color: #1f2937;
+      margin: 0; padding: 20px;
     }
-    body{background:var(--bg);color:var(--white);font-family:'Noto Sans Arabic','Inter',sans-serif;min-height:100vh;direction:rtl;}
-
-    /* ── Animated gradient background ── */
-    body::before{
-      content:'';position:fixed;inset:0;
-      background:radial-gradient(ellipse at 20% 20%, #1E1B4B88 0%, transparent 60%),
-                 radial-gradient(ellipse at 80% 80%, #06B6D422 0%, transparent 60%);
-      pointer-events:none;z-index:0;
+    .header {
+      text-align: center; margin-bottom: 30px;
+      padding: 30px;
+      background: linear-gradient(135deg, #005C53, #007D72);
+      border-radius: 16px;
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      position: relative;
     }
-
-    .page{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:40px 24px 80px;}
-
-    /* ── Header ── */
-    .header{
-      display:flex;align-items:center;gap:18px;
-      background:linear-gradient(135deg,#6366F122,#06B6D412);
-      border:1px solid #6366F133;border-radius:20px;padding:28px 32px;
-      margin-bottom:36px;
+    .moh-logo {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      height: 80px;
     }
-    .header-icon{font-size:40px;line-height:1;}
-    .header-title{font-size:28px;font-weight:900;letter-spacing:0.3px;
-      background:linear-gradient(135deg,#6366F1,#06B6D4);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .header-sub{color:var(--muted);font-size:14px;margin-top:4px;}
-    .header-badge{margin-right:auto;background:linear-gradient(135deg,#6366F1,#06B6D4);
-      color:#fff;font-size:13px;font-weight:700;padding:8px 18px;border-radius:30px;white-space:nowrap;}
-    .header-date{color:var(--muted);font-size:12px;margin-top:2px;}
-
-    /* ── Section Title ── */
-    .section-title{font-size:17px;font-weight:700;color:var(--white);
-      display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-    .section-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
-      justify-content:center;font-size:18px;flex-shrink:0;}
-
-    /* ── Indicator Cards ── */
-    .ind-card{
-      background:var(--surface);border:1px solid #ffffff15;border-radius:18px;
-      padding:20px;margin-bottom:16px;
-      transition:box-shadow 0.3s,transform 0.2s;
+    .header h1 { margin: 0; font-size: 32px; font-weight: 800; }
+    .header p { margin: 8px 0 0; color: #a7f3d0; font-size: 16px; }
+    
+    .ind-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      border: 1px solid #e5e7eb;
     }
-    .ind-card:hover{box-shadow:0 0 24px #6366F130;transform:translateY(-2px);}
-    .ind-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
-    .ind-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-    .ind-meta{flex:1;}
-    .ind-name{font-size:15px;font-weight:700;color:var(--white);}
-    .ind-cat{font-size:12px;color:var(--muted);margin-top:2px;}
-    .status-badge{font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid;white-space:nowrap;}
-    .ind-values{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
-    .val-block{flex:1;min-width:100px;}
-    .val-label{font-size:11px;color:var(--muted);margin-bottom:4px;}
-    .val-number{font-size:16px;font-weight:700;}
-    .val-arrow{font-size:20px;color:#ffffff30;}
-    .ind-donut{margin-right:auto;}
-    .prog-wrap{border-top:1px solid #ffffff10;padding-top:12px;}
-    .prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;}
-    .prog-track{background:#ffffff10;border-radius:6px;height:8px;overflow:hidden;}
-    .prog-fill{height:100%;border-radius:6px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
-
-    /* ── Summary Section ── */
-    .summary-wrap{
-      background:linear-gradient(135deg,var(--surface),var(--surface2));
-      border:1px solid #ffffff15;border-radius:20px;padding:28px;margin-top:36px;
+    .ind-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .ind-title { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; color: #374151;}
+    .ind-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
     }
-    .summary-inner{display:flex;align-items:center;gap:36px;flex-wrap:wrap;}
-    .stat-cards{display:flex;gap:14px;flex:1;flex-wrap:wrap;}
-    .stat-card{flex:1;min-width:100px;padding:18px 14px;border-radius:14px;text-align:center;}
-    .stat-number{font-size:28px;font-weight:900;margin-bottom:4px;}
-    .stat-label{font-size:12px;color:var(--muted);}
-    .stat-icon{font-size:22px;margin-bottom:8px;}
-
-    /* ── Chart Section ── */
-    .chart-wrap{
-      background:var(--surface);border:1px solid #ffffff15;border-radius:20px;
-      padding:24px;margin-top:24px;
+    .ind-status {
+      padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;
+      color: white;
     }
-    .chart-title{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;margin-bottom:20px;}
-
-    /* ── Footer ── */
-    .footer{margin-top:48px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid #ffffff0D;padding-top:20px;}
-    .footer span{background:linear-gradient(135deg,#6366F1,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;}
-
-    /* ── Print ── */
-    @media print{
-      body::before{display:none;}
-      .ind-card,.chart-wrap,.summary-wrap{break-inside:avoid;}
+    .ind-values { 
+      display: flex; align-items: center; gap: 16px; background: #f9fafb; padding: 16px; border-radius: 12px;
     }
-    @media(max-width:600px){
-      .header{flex-wrap:wrap;}.header-badge{margin-right:0;}
-      .ind-values{flex-direction:column;}.ind-donut{margin-right:0;}
+    .val-block { display: flex; flex-direction: column; gap: 4px; }
+    .val-label { font-size: 12px; color: #6b7280; }
+    .val-number { font-size: 20px; font-weight: 800; }
+    .val-arrow { color: #9ca3af; font-size: 18px; align-self: center; }
+    .ind-donut { margin-right: auto; }
+
+    .chart-wrap {
+      background: white; border-radius: 16px; padding: 24px; margin-top: 30px;
+      border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     }
+    .chart-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: #374151;}
+    .section-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;}
+    
+    .summary-wrap { background: white; border-radius: 16px; padding: 24px; margin-top: 30px; border: 1px solid #e5e7eb; }
+    .summary-inner { display: flex; align-items: center; gap: 36px; flex-wrap: wrap; }
+    .stat-cards { display: flex; gap: 14px; flex: 1; flex-wrap: wrap; }
+    .stat-card { flex: 1; min-width: 100px; padding: 18px; border-radius: 14px; text-align: center; border: 1px solid #e5e7eb; }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 <body>
 <div class="page">
-
-  <!-- Header -->
   <div class="header">
-    <div class="header-icon">📊</div>
-    <div>
-      <div class="header-title">$title</div>
-      <div class="header-sub">لوحة مقارنة مؤشرات الصحة بأهداف منظمة الصحة العالمية (WHO)</div>
-      <div class="header-date">تاريخ التصدير: $dateStr</div>
-    </div>
-    <div class="header-badge">${indicators.length} مؤشرات</div>
+    <img src="https://www.moh.gov.sa/SiteCollectionImages/MOH_Logo_W.png" alt="MOH Logo" class="moh-logo" onerror="this.style.display='none'">
+    <h1>$title</h1>
+    <p>تم الإنشاء بتاريخ $dateStr</p>
   </div>
 
   <!-- Indicators -->
   <div class="section-title">
-    <div class="section-icon" style="background:#6366F122;">📋</div>
+    <div class="section-icon" style="background:#005C5322; color:#005C53;">
+      <span class="material-symbols-outlined">dataset</span>
+    </div>
     المؤشرات الصحية
   </div>
   $indicatorCards
@@ -373,7 +326,9 @@ class DashboardHtmlExporter {
   <!-- Bar Chart -->
   <div class="chart-wrap">
     <div class="chart-title">
-      <div class="section-icon" style="background:#6366F122;font-size:16px;">📊</div>
+      <div class="section-icon" style="background:#005C5322;color:#005C53;">
+        <span class="material-symbols-outlined">bar_chart</span>
+      </div>
       الوضع الحالي مقابل الهدف المستهدف
     </div>
     $barChart

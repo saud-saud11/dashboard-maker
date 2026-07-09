@@ -667,12 +667,12 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
             icon: const Icon(Icons.download_rounded),
             label: const Text('تصدير الداشبورد كـ HTML', style: TextStyle(fontWeight: FontWeight.bold)),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6366F1),
+              backgroundColor: const Color(0xFF047857), // Emerald 700
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
               elevation: 8,
-              shadowColor: const Color(0x606366F1),
+              shadowColor: const Color(0x60047857),
             ),
           ),
         ),
@@ -2063,14 +2063,14 @@ class _TemplateBtn extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E293B),
+          color: const Color(0xFF064E3B),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: const Color(0x33FFFFFF)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 16, color: const Color(0xFF6366F1)),
+            Icon(icon, size: 16, color: const Color(0xFF10B981)),
             const SizedBox(width: 8),
             Text(title, style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold)),
           ],
