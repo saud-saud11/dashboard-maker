@@ -1,6 +1,8 @@
 import 'dart:math' as math;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/html_exporter.dart';
 
 // ══════════════════════════════════════════════════════════════════
@@ -24,6 +26,26 @@ class Indicator {
     this.direction = IndicatorDirection.higherIsBetter,
     this.category = IndicatorCategory.general,
   });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'current': current,
+    'target': target,
+    'unit': unit,
+    'direction': direction.name,
+    'category': category.name,
+  };
+
+  factory Indicator.fromJson(Map<String, dynamic> json) => Indicator(
+    id: json['id'],
+    name: json['name'],
+    current: json['current'],
+    target: json['target'],
+    unit: json['unit'],
+    direction: IndicatorDirection.values.firstWhere((e) => e.name == json['direction'], orElse: () => IndicatorDirection.higherIsBetter),
+    category: IndicatorCategory.values.firstWhere((e) => e.name == json['category'], orElse: () => IndicatorCategory.general),
+  );
 
   double get pct {
     if (target == 0) return 100;
@@ -73,21 +95,21 @@ extension IndicatorCategoryExt on IndicatorCategory {
 
   Color get color {
     switch (this) {
-      case IndicatorCategory.general: return const Color(0xFF6366F1);
-      case IndicatorCategory.health: return const Color(0xFFEC4899);
-      case IndicatorCategory.education: return const Color(0xFF06B6D4);
-      case IndicatorCategory.environment: return const Color(0xFF10B981);
-      case IndicatorCategory.economic: return const Color(0xFFF59E0B);
+      case IndicatorCategory.general: return const Color(0xFF006C5B); // MOH Teal
+      case IndicatorCategory.health: return const Color(0xFF10B981); // Emerald
+      case IndicatorCategory.education: return const Color(0xFF00ACC1); // Light Teal
+      case IndicatorCategory.environment: return const Color(0xFF43A047); // Green
+      case IndicatorCategory.economic: return const Color(0xFFD97706); // Amber
     }
   }
 
-  String get emoji {
+  IconData get icon {
     switch (this) {
-      case IndicatorCategory.general: return '📊';
-      case IndicatorCategory.health: return '❤️';
-      case IndicatorCategory.education: return '📚';
-      case IndicatorCategory.environment: return '🌿';
-      case IndicatorCategory.economic: return '💰';
+      case IndicatorCategory.general: return Icons.bar_chart_rounded;
+      case IndicatorCategory.health: return Icons.favorite_rounded;
+      case IndicatorCategory.education: return Icons.school_rounded;
+      case IndicatorCategory.environment: return Icons.eco_rounded;
+      case IndicatorCategory.economic: return Icons.payments_rounded;
     }
   }
 }
@@ -118,6 +140,7 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
 
   // View mode for the dashboard grid
   DashViewMode _viewMode = DashViewMode.infographic;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -130,10 +153,49 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
     _currentCtrl.addListener(() => setState(() {}));
     _targetCtrl.addListener(() => setState(() {}));
     _unitCtrl.addListener(() => setState(() {}));
+    _dashboardTitleCtrl.addListener(_saveData);
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final title = prefs.getString('dash_title');
+      if (title != null) _dashboardTitleCtrl.text = title;
+
+      final indsStr = prefs.getString('dash_indicators');
+      if (indsStr != null) {
+        final List<dynamic> jsonList = jsonDecode(indsStr);
+        setState(() {
+          _indicators.clear();
+          _indicators.addAll(jsonList.map((e) => Indicator.fromJson(e)));
+        });
+      }
+    } catch (_) {}
+    setState(() => _isLoading = false);
+  }
+
+  Future<void> _saveData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('dash_title', _dashboardTitleCtrl.text);
+      final indsJson = jsonEncode(_indicators.map((e) => e.toJson()).toList());
+      await prefs.setString('dash_indicators', indsJson);
+    } catch (_) {}
+  }
+
+  void _clearData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    setState(() {
+      _indicators.clear();
+      _dashboardTitleCtrl.text = 'لوحة المؤشرات الصحية';
+    });
   }
 
   @override
   void dispose() {
+    _dashboardTitleCtrl.removeListener(_saveData);
     _dashboardTitleCtrl.dispose();
     _addAnimCtrl.dispose();
     _nameCtrl.dispose();
@@ -165,6 +227,7 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
           Indicator(id: 'm3', name: 'نسبة الإشغال', current: 75, target: 80, unit: '%', category: IndicatorCategory.health),
         ]);
       }
+      _saveData();
     });
   }
 
@@ -200,12 +263,28 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
       _currentCtrl.clear();
       _targetCtrl.clear();
       _unitCtrl.text = '%';
+      _saveData();
     });
     _addAnimCtrl.forward(from: 0);
   }
 
+  void _removeIndicator(Indicator ind) {
+    setState(() {
+      _indicators.remove(ind);
+      _saveData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: CircularProgressIndicator(color: Color(0xFF10B981)),
+        ),
+      );
+    }
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Column(
@@ -240,14 +319,14 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1E1B4B), Color(0xFF0F172A)],
+          colors: [Color(0xFF006C5B), Color(0xFF022C22)],
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
         ),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0x336366F1)),
+        border: Border.all(color: const Color(0x3310B981)),
         boxShadow: const [
-          BoxShadow(color: Color(0x406366F1), blurRadius: 32, offset: Offset(0, 8)),
+          BoxShadow(color: Color(0x30006C5B), blurRadius: 32, offset: Offset(0, 8)),
         ],
       ),
       child: Row(
@@ -256,27 +335,45 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('إنشاء داشبورد', style: TextStyle(
-                  fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white,
+                const Text('منصة مؤشرات وزارة الصحة', style: TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.w900, color: Colors.white,
                 )),
                 const SizedBox(height: 6),
                 Text(
-                  'أدخل المعدلات الحالية والأهداف لإنشاء إنفوجرافيك تفاعلي',
-                  style: TextStyle(fontSize: 13, color: Colors.grey[400], height: 1.4),
+                  'أدخل المعدلات الحالية والأهداف لإنشاء إنفوجرافيك تفاعلي رسمي',
+                  style: TextStyle(fontSize: 13, color: Colors.grey[300], height: 1.4),
                 ),
+                const SizedBox(height: 12),
+                if (total > 0)
+                  TextButton.icon(
+                    onPressed: _clearData,
+                    icon: const Icon(Icons.delete_sweep_rounded, color: Colors.white70, size: 18),
+                    label: const Text('مسح كافة المؤشرات', style: TextStyle(color: Colors.white70)),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white12,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
+                  ),
               ],
             ),
           ),
+          const SizedBox(width: 20),
           if (total > 0) ...[
-            const SizedBox(width: 20),
             Column(
               children: [
                 _MiniRing(pct: avg, size: 64, strokeW: 6, label: '${avg.toStringAsFixed(0)}%'),
                 const SizedBox(height: 6),
-                Text('$achieved/$total مُحقَّق', style: TextStyle(fontSize: 11, color: Colors.grey[400])),
+                Text('$achieved/$total مُحقَّق', style: TextStyle(fontSize: 11, color: Colors.grey[300])),
               ],
             ),
+            const SizedBox(width: 16),
           ],
+          Image.network(
+            'https://www.moh.gov.sa/SiteCollectionImages/MOH_Logo_W.png',
+            height: 70,
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.health_and_safety_rounded, size: 50, color: Colors.white70),
+          ),
         ],
       ),
     );
@@ -312,14 +409,14 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
+        color: const Color(0xFF064E3B), // MOH dark green surface
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: hasData ? const Color(0xFF6366F1) : const Color(0x1AFFFFFF),
+          color: hasData ? const Color(0xFF10B981) : const Color(0x1AFFFFFF),
           width: hasData ? 1.5 : 1,
         ),
         boxShadow: hasData ? const [
-          BoxShadow(color: Color(0x306366F1), blurRadius: 20, offset: Offset(0, 6)),
+          BoxShadow(color: Color(0x3010B981), blurRadius: 20, offset: Offset(0, 6)),
         ] : null,
       ),
       child: Column(
@@ -333,7 +430,7 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(colors: [Color(0xFF6366F1), Color(0xFF06B6D4)]),
+                    gradient: const LinearGradient(colors: [Color(0xFF006C5B), Color(0xFF10B981)]),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.add_chart_rounded, color: Colors.white, size: 18),
@@ -386,20 +483,20 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0F172A),
+                        color: const Color(0xFF022C22),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: const Color(0x1AFFFFFF)),
                       ),
-                      child: const Text('→', style: TextStyle(color: Colors.white70, fontSize: 18)),
+                      child: const Text('↔', style: TextStyle(color: Colors.white70, fontSize: 18)),
                     ),
                   ],
                 ),
                 const SizedBox(width: 8),
                 Expanded(child: _InputField(
                   controller: _targetCtrl,
-                  label: 'الهدف المستهدف',
+                  label: 'الهدف',
                   icon: Icons.flag_rounded,
-                  color: const Color(0xFF06B6D4),
+                  color: const Color(0xFF10B981),
                   isNumeric: true,
                 )),
               ],
@@ -488,12 +585,12 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   gradient: hasData
-                      ? const LinearGradient(colors: [Color(0xFF6366F1), Color(0xFF06B6D4)])
+                      ? const LinearGradient(colors: [Color(0xFF006C5B), Color(0xFF10B981)])
                       : null,
                   color: hasData ? null : const Color(0x1AFFFFFF),
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: hasData ? const [
-                    BoxShadow(color: Color(0x506366F1), blurRadius: 16, offset: Offset(0, 4)),
+                    BoxShadow(color: Color(0x3010B981), blurRadius: 16, offset: Offset(0, 4)),
                   ] : null,
                 ),
                 child: Material(
@@ -626,12 +723,12 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
                   _unitCtrl.text = ind.unit;
                   _dir = ind.direction;
                   _cat = ind.category;
-                  _indicators.remove(ind);
+                  _removeIndicator(ind);
                 });
               },
               deleteIcon: const Icon(Icons.close, size: 16, color: Colors.white70),
               onDeleted: () {
-                setState(() => _indicators.remove(ind));
+                _removeIndicator(ind);
               },
               backgroundColor: ind.categoryColor.withAlpha(40),
               side: BorderSide(color: ind.categoryColor.withAlpha(100)),
@@ -740,7 +837,7 @@ class _CreateDashboardPageState extends State<CreateDashboardPage>
       key: const ValueKey('infographic'),
       children: _indicators.map((ind) => Padding(
         padding: const EdgeInsets.only(bottom: 16),
-        child: _FullKpiCard(indicator: ind, onDelete: () => setState(() => _indicators.remove(ind))),
+        child: _FullKpiCard(indicator: ind, onDelete: () => _removeIndicator(ind)),
       )).toList(),
     );
   }
@@ -1268,7 +1365,7 @@ class _KpiCard extends StatelessWidget {
           // Top: emoji + status
           Row(
             children: [
-              Text(ind.category.emoji, style: const TextStyle(fontSize: 22)),
+              Icon(ind.category.icon, color: col, size: 22),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1374,7 +1471,7 @@ class _FullKpiCardState extends State<_FullKpiCard> with SingleTickerProviderSta
                 ),
                 child: Row(
                   children: [
-                    Text(ind.category.emoji, style: const TextStyle(fontSize: 24)),
+                    Icon(ind.category.icon, color: catCol, size: 24),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -1533,7 +1630,7 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
             children: [
               Row(
                 children: [
-                  Text(ind.category.emoji),
+                  Icon(ind.category.icon, color: ind.categoryColor, size: 20),
                   const SizedBox(width: 8),
                   Expanded(child: Text(ind.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white))),
                   Container(

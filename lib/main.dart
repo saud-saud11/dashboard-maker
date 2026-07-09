@@ -11,17 +11,17 @@ class DashboardMakerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dashboard Maker',
+      title: 'صانع لوحات التحكم لوزارة الصحة',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
         brightness: Brightness.dark,
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFF0B0F19),
+        scaffoldBackgroundColor: const Color(0xFF022C22),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF6366F1), // Indigo
-          secondary: Color(0xFF06B6D4), // Cyan
-          surface: Color(0xFF1E293B), // Slate 800
+          primary: Color(0xFF10B981), // Emerald/Mint
+          secondary: Color(0xFF006C5B), // MOH Deep Teal
+          surface: Color(0xFF064E3B), // Dark Emerald Surface
         ),
       ),
       // Set localization support for Arabic (RTL)
@@ -54,9 +54,9 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
                 decoration: const BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      Color(0xFF1E1B4B), // Very deep purple/indigo
-                      Color(0xFF0F172A), // Slate 900
-                      Color(0xFF090D16), // Midnight
+                      Color(0xFF042F2E), // Dark Teal
+                      Color(0xFF022C22), // Dark Green
+                      Color(0xFF011C15), // Midnight Green
                     ],
                     center: Alignment(0, -0.5),
                     radius: 1.5,
@@ -73,7 +73,7 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
                 height: 300,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0x266366F1),
+                  color: Color(0x1A10B981),
                 ),
               ),
             ),
@@ -85,7 +85,7 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
                 height: 250,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0x2606B6D4),
+                  color: Color(0x1A006C5B),
                 ),
               ),
             ),
@@ -141,20 +141,20 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: const LinearGradient(
-                colors: [Color(0xFF6366F1), Color(0xFF06B6D4)],
+                colors: [Color(0xFF006C5B), Color(0xFF10B981)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0x666366F1),
+                  color: const Color(0x44006C5B),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
               ],
             ),
             child: const Icon(
-              Icons.dashboard_customize_rounded,
+              Icons.health_and_safety_rounded,
               size: 48,
               color: Colors.white,
             ),
@@ -163,17 +163,16 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
           
           // App Title
           const Text(
-            'داشبورد ميكر',
+            'بوابة مؤشرات وزارة الصحة',
             style: TextStyle(
-              fontSize: 36,
+              fontSize: 32,
               fontWeight: FontWeight.w900,
-              letterSpacing: 0.5,
               color: Colors.white,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'منصتك الذكية لبناء وعرض لوحات تحكم تفاعلية متكاملة',
+            'منصتك الذكية لبناء وعرض لوحات تحكم تفاعلية متكاملة وفق الهوية البصرية للوزارة',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -189,20 +188,20 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(child: _buildChoiceCard(
-                      title: 'إنشاء داشبورد',
-                      subtitle: 'ابدأ بتصميم لوحة تحكم جديدة مخصصة، وأضف المؤشرات والرسوم البيانية وتفاعل مع بياناتك.',
-                      icon: Icons.add_rounded,
-                      gradientColors: [const Color(0xFF6366F1), const Color(0xFF4F46E5)],
-                      glowColor: const Color(0xFF6366F1),
+                      title: 'إنشاء لوحة مؤشرات',
+                      subtitle: 'ابدأ بتصميم لوحة تحكم جديدة مخصصة، وأضف المعدل الحالي والمستهدف لكل مؤشر صحي.',
+                      icon: Icons.add_chart_rounded,
+                      gradientColors: [const Color(0xFF006C5B), const Color(0xFF004D40)],
+                      glowColor: const Color(0xFF006C5B),
                       onTap: () => setState(() => _selectedAction = 'create'),
                     )),
                     const SizedBox(width: 24),
                     Expanded(child: _buildChoiceCard(
-                      title: 'عرض داشبورد',
-                      subtitle: 'تصفح واستعرض لوحات التحكم المحفوظة، وتابع البيانات الحية والمؤشرات الإحصائية في مكان واحد.',
+                      title: 'عرض لوحة المؤشرات',
+                      subtitle: 'تصفح واستعرض لوحات التحكم المحفوظة، وتابع البيانات الحية والمؤشرات الإحصائية لمستشفياتك.',
                       icon: Icons.analytics_rounded,
-                      gradientColors: [const Color(0xFF06B6D4), const Color(0xFF0891B2)],
-                      glowColor: const Color(0xFF06B6D4),
+                      gradientColors: [const Color(0xFF10B981), const Color(0xFF059669)],
+                      glowColor: const Color(0xFF10B981),
                       onTap: () => setState(() => _selectedAction = 'view'),
                     )),
                   ],
@@ -210,20 +209,20 @@ class _DashboardPortalPageState extends State<DashboardPortalPage> {
               : Column(
                   children: [
                     _buildChoiceCard(
-                      title: 'إنشاء داشبورد',
-                      subtitle: 'ابدأ بتصميم لوحة تحكم جديدة مخصصة، وأضف المؤشرات والرسوم البيانية وتفاعل مع بياناتك.',
-                      icon: Icons.add_rounded,
-                      gradientColors: [const Color(0xFF6366F1), const Color(0xFF4F46E5)],
-                      glowColor: const Color(0xFF6366F1),
+                      title: 'إنشاء لوحة مؤشرات',
+                      subtitle: 'ابدأ بتصميم لوحة تحكم جديدة مخصصة، وأضف المعدل الحالي والمستهدف لكل مؤشر صحي.',
+                      icon: Icons.add_chart_rounded,
+                      gradientColors: [const Color(0xFF006C5B), const Color(0xFF004D40)],
+                      glowColor: const Color(0xFF006C5B),
                       onTap: () => setState(() => _selectedAction = 'create'),
                     ),
                     const SizedBox(height: 20),
                     _buildChoiceCard(
-                      title: 'عرض داشبورد',
-                      subtitle: 'تصفح واستعرض لوحات التحكم المحفوظة، وتابع البيانات الحية والمؤشرات الإحصائية في مكان واحد.',
+                      title: 'عرض لوحة المؤشرات',
+                      subtitle: 'تصفح واستعرض لوحات التحكم المحفوظة، وتابع البيانات الحية والمؤشرات الإحصائية لمستشفياتك.',
                       icon: Icons.analytics_rounded,
-                      gradientColors: [const Color(0xFF06B6D4), const Color(0xFF0891B2)],
-                      glowColor: const Color(0xFF06B6D4),
+                      gradientColors: [const Color(0xFF10B981), const Color(0xFF059669)],
+                      glowColor: const Color(0xFF10B981),
                       onTap: () => setState(() => _selectedAction = 'view'),
                     ),
                   ],
