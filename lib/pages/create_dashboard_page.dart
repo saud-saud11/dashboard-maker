@@ -1402,7 +1402,7 @@ class _KpiCard extends StatelessWidget {
               const Spacer(),
               const Text('→', style: TextStyle(color: Colors.white24)),
               const Spacer(),
-              _MicroValue(label: 'هدف', value: '${ind.target}', color: const Color(0xFF06B6D4)),
+              _MicroValue(label: 'هدف', value: '${ind.target}', color: const Color(0xFF10B981)),
             ],
           ),
         ],
@@ -1530,7 +1530,7 @@ class _FullKpiCardState extends State<_FullKpiCard> with SingleTickerProviderSta
                               Expanded(child: _StatBox(
                                 label: 'الهدف',
                                 value: '${ind.target} ${ind.unit}',
-                                color: const Color(0xFF06B6D4),
+                                color: const Color(0xFF10B981),
                               )),
                             ],
                           ),
@@ -1686,8 +1686,8 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('الهدف (WHO)', style: TextStyle(fontSize: 11, color: Color(0xFF06B6D4))),
-                      Text('${ind.target} ${ind.unit}', style: const TextStyle(fontSize: 12, color: Color(0xFF06B6D4), fontWeight: FontWeight.bold)),
+                      const Text('الهدف المستهدف', style: TextStyle(fontSize: 11, color: Color(0xFF10B981))),
+                      Text('${ind.target} ${ind.unit}', style: const TextStyle(fontSize: 12, color: Color(0xFF10B981), fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -1702,7 +1702,7 @@ class _ComparisonBarState extends State<_ComparisonBar> with SingleTickerProvide
                             height: 22,
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color(0xFF06B6D4), Color(0xFF0891B2)],
+                                colors: [Color(0xFF10B981), Color(0xFF006C5B)],
                               ),
                               borderRadius: BorderRadius.circular(8),
                             ),
